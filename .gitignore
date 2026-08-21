@@ -1,0 +1,15 @@
+java/target/
+**/target/
+.idea/
+*.iml
+.DS_Store
+*.log
+*.class
+.cursor/
+.vscode/
+META-INF/
+**/snapshots/*.json
+**/furnidata.xml
+dist/
+*.jar
+!store-submission/**/extension.zip
