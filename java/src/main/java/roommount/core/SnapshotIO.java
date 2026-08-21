@@ -73,10 +73,14 @@ public final class SnapshotIO {
 
     public List<Models.Target> capture(RoomTracker room, boolean includeStackMagic) {
         List<Models.Target> list = new ArrayList<>();
+        int skippedStack = 0;
         for (HFloorItem f : room.floorItems()) {
             String cn = classNameOf(f);
             if (!includeStackMagic && (FurniCatalog.isStackMagic(cn)
-                    || FurniCatalog.isStackMagicTypeId(f.getTypeId()))) continue;
+                    || FurniCatalog.isStackMagicTypeId(f.getTypeId()))) {
+                skippedStack++;
+                continue;
+            }
             Models.FurniMeta meta = catalog.floorByType(f.getTypeId());
             Models.Target t = new Models.Target();
             t.type = "floor";
@@ -117,7 +121,14 @@ public final class SnapshotIO {
                 .thenComparingInt(t -> t.y)
                 .thenComparingDouble(t -> t.z)
                 .thenComparingInt(t -> t.id));
+        this.lastSkippedStackMagic = skippedStack;
         return list;
+    }
+
+    private volatile int lastSkippedStackMagic;
+
+    public int lastSkippedStackMagic() {
+        return lastSkippedStackMagic;
     }
 
     public void save(String name, List<Models.Target> targets) throws IOException {

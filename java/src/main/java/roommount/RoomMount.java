@@ -394,7 +394,9 @@ public class RoomMount extends ExtensionForm {
                 }
                 snapshots.save(name.trim(), targets);
                 String id = SnapshotIO.sanitize(name.trim());
-                log("Saved \"" + id + "\" — floor " + floors + " · wall " + walls);
+                int skippedSm = snapshots.lastSkippedStackMagic();
+                log("Saved \"" + id + "\" — floor " + floors + " · wall " + walls
+                        + (skippedSm > 0 ? (" (skipped " + skippedSm + " Magic Stack Tile)") : ""));
                 if (floors == 0) {
                     log("WARNING: floor 0 — place real furniture then :msave again (stackmagic is not saved)");
                 }

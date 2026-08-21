@@ -1,6 +1,6 @@
-﻿{
+{
   "title": "Room Backup",
-  "description": "Save and remount Habbo room layouts (floor + wall), including stacked heights with Magic Stack Tile and furniture states.\n\nPlace missing items aside first, then remount with stackmagic. Walls use G-BuildTools-style moves.\n\nInspired by G-Presets and G-BuildTools.\n\nTested on Habbo ES - should work on other hotels G-Earth supports.",
+  "description": "Save and remount Habbo room layouts (floor + wall), including stacked heights with Magic Stack Tile and furniture states.\n\nPlace missing items aside first, then remount with stackmagic. Walls use G-BuildTools-style moves.\n\nInspired by G-Presets and G-BuildTools.\n\nTested on Habbo ES - should work on other hotels G-Earth supports. Large rooms: merges multi-packet Objects/Items (Magic Stack Tiles are intentionally not saved).",
   "authors": [
     {
       "name": "reactruler",
@@ -10,7 +10,7 @@
       "twitter": null
     }
   ],
-  "version": "1.0.0",
+  "version": "1.0.1",
   "categories": ["Building"],
   "source": "https://github.com/ReactRuler/Room-Backup",
   "readme": "https://github.com/ReactRuler/Room-Backup/blob/main/README.md",
@@ -29,6 +29,6 @@
     "clients": ["Unity", "Flash", "Nitro", "Origins"]
   },
   "submissionDate": "21-08-2026 14:52:13",
-  "updateDate": "21-08-2026 14:52:13",
+  "updateDate": "21-08-2026 18:22:26",
   "isOutdated": false
 }
