@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>roombackup</groupId>
   <artifactId>RoomBackup</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
   <name>RoomBackup</name>
 
@@ -22,8 +22,6 @@
       <groupId>G-Earth</groupId>
       <artifactId>G-Earth</artifactId>
       <version>1.5-local</version>
-      <scope>system</scope>
-      <systemPath>${gearth.path}</systemPath>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>

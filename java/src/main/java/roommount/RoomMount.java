@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@ExtensionInfo(Title = "Room Backup", Description = "Save & remount room layouts with Magic Stack Tile", Version = "1.0.0", Author = "reactruler")
+@ExtensionInfo(Title = "Room Backup", Description = "Save & remount room layouts with Magic Stack Tile", Version = "1.0.1", Author = "reactruler")
 public class RoomMount extends ExtensionForm {
     public Label statusLbl;
     public Label helpLbl;
@@ -140,7 +140,7 @@ public class RoomMount extends ExtensionForm {
             refreshList(false);
             updateStatus();
             tryLoadLocalFurnidata();
-            log("Room Backup 1.0.0 ready");
+            log("Room Backup 1.0.1 ready");
             sayHelpBrief();
         });
     }
@@ -317,12 +317,12 @@ public class RoomMount extends ExtensionForm {
     }
 
     private void showHelp() {
-        log("Room Backup 1.0.0 — place a Magic Stack Tile, then :msave / :mload");
+        log("Room Backup 1.0.1 — place a Magic Stack Tile, then :msave / :mload");
         log("Commands: :msave name · :mload name · :mdel name · :mlist · :mstop · :mopt · :mstack · :mhelp");
     }
 
     private void sayHelpBrief() {
-        log("Room Backup 1.0.0 — :msave · :mload · :mdel · :mstack · :mhelp");
+        log("Room Backup 1.0.1 — :msave · :mload · :mdel · :mstack · :mhelp");
     }
 
     public void onSave(ActionEvent e) {
@@ -372,6 +372,8 @@ public class RoomMount extends ExtensionForm {
                 if (room.floorItems().isEmpty()) {
                     room.ensureFloorLoaded(2500);
                 }
+                room.waitForFurniSettle(500, 8000);
+                log("Capturing room: floor=" + room.floorItems().size() + " wall=" + room.wallItems().size());
                 List<Models.Target> targets = snapshots.capture(room, false);
                 long floors = targets.stream().filter(t -> "floor".equals(t.type)).count();
                 long walls = targets.stream().filter(t -> "wall".equals(t.type)).count();
@@ -552,7 +554,7 @@ public class RoomMount extends ExtensionForm {
                 java.net.HttpURLConnection conn = (java.net.HttpURLConnection) java.net.URI.create(url).toURL().openConnection();
                 conn.setConnectTimeout(15000);
                 conn.setReadTimeout(60000);
-                conn.setRequestProperty("User-Agent", "RoomBackup/1.0.0");
+                conn.setRequestProperty("User-Agent", "RoomBackup/1.0.1");
                 try (java.io.InputStream in = conn.getInputStream()) {
                     Path dest = extDir.resolve("furnidata.xml");
                     Files.copy(in, dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);

@@ -190,6 +190,7 @@ public final class RoomTracker {
 
     public boolean forceRefreshFloor(long timeoutMs) {
         onLog.accept("Refreshing floor Objects…");
+        floor.clear();
         CountDownLatch latch = new CountDownLatch(1);
         floorLatch = latch;
         long before = floorEpoch.get();
@@ -201,10 +202,36 @@ public final class RoomTracker {
         }
         if (floorLatch == latch) floorLatch = null;
         boolean got = floorEpoch.get() != before;
+        if (got) waitForFurniSettle(400, Math.min(4000, timeoutMs));
         onLog.accept(got
                 ? ("Floor refreshed: " + floor.size() + " items")
                 : ("No new Objects packet — pick up & re-place the Magic Stack Tile, or leave+enter the room"));
         return got;
+    }
+
+    public void waitForFurniSettle(long quietMs, long maxWaitMs) {
+        long deadline = System.currentTimeMillis() + Math.max(0, maxWaitMs);
+        int lastF = -1;
+        int lastW = -1;
+        long lastChange = System.currentTimeMillis();
+        while (System.currentTimeMillis() < deadline) {
+            int f = floor.size();
+            int w = wall.size();
+            if (f != lastF || w != lastW) {
+                lastF = f;
+                lastW = w;
+                lastChange = System.currentTimeMillis();
+                onLog.accept("Loading room furni… floor=" + f + " wall=" + w);
+            } else if (f + w > 0 && System.currentTimeMillis() - lastChange >= quietMs) {
+                return;
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
     }
 
     public boolean ensureFloorLoaded(long timeoutMs) {
@@ -256,13 +283,16 @@ public final class RoomTracker {
                         : ("type:" + item.getTypeId());
                 classCounts.merge(cn, 1, Integer::sum);
             }
-            floor.clear();
+            int before = floor.size();
             floor.putAll(next);
             inRoom = true;
             floorEpoch.incrementAndGet();
             CountDownLatch latch = floorLatch;
             if (latch != null) latch.countDown();
-            onLog.accept("Parsed floor furni: " + floor.size() + (unread > 0 ? (" (unread bytes=" + unread + ")") : ""));
+            onLog.accept("Parsed floor chunk +" + next.size()
+                    + " → total " + floor.size()
+                    + (before > 0 ? (" (was " + before + ")") : "")
+                    + (unread > 0 ? (" (unread bytes=" + unread + ")") : ""));
             if (!classCounts.isEmpty()) {
                 StringBuilder sb = new StringBuilder("Floor kinds: ");
                 int n = 0;
@@ -372,10 +402,12 @@ public final class RoomTracker {
             for (HWallItem item : items) {
                 if (item != null) next.put(item.getId(), item);
             }
-            wall.clear();
+            int before = wall.size();
             wall.putAll(next);
             inRoom = true;
-            onLog.accept("Parsed wall furni: " + wall.size());
+            onLog.accept("Parsed wall chunk +" + next.size()
+                    + " → total " + wall.size()
+                    + (before > 0 ? (" (was " + before + ")") : ""));
             fire();
             if (floor.isEmpty() && !wall.isEmpty()) {
                 requestReload();
