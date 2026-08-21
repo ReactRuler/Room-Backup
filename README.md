@@ -96,7 +96,7 @@ Creates `store-submission/Room Backup/extension.zip`.
 
 ## Author
 
-- **reactruler** — Habbo: **Habbito** (`.es` / `.com` / `.fr` / `.com.tr`)
+- GitHub: **[reactruler](https://github.com/ReactRuler)** — Habbo: **-Habbito** (`.es` / `.com` / `.fr` / `.com.tr`)
 - Discord: **reactruler28**
 
 ## License
